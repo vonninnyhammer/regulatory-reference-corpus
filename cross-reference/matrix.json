@@ -1,0 +1,104 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-08-26T00:00:00Z",
+  "description": "Cross-reference matrix mapping regulatory requirements to pipeline operational domains. Strictest standard wins in conflicts.",
+  "domains": {
+    "data_encryption": {
+      "at_rest": {
+        "HIPAA": { "requirement": "AES-256 for ePHI at rest", "citation": "45 CFR 164.312(a)(2)(iv)", "strictness": 10 },
+        "ABA_Model_Rules": { "requirement": "Reasonable encryption for client files", "citation": "Rule 1.6 Comment [18]", "strictness": 7 },
+        "GLBA": { "requirement": "Safeguards Rule — encryption recommended, not mandated (but FTC treats as best practice)", "citation": "16 CFR 314", "strictness": 6 },
+        "OSHA": { "requirement": "No specific encryption mandate", "citation": "N/A", "strictness": 1 },
+        "DOT_FMCSA": { "requirement": "No specific encryption mandate for ELD/HOS data", "citation": "N/A", "strictness": 1 },
+        "effective_rule": "HIPAA — AES-256 at rest for all sensitive documents",
+        "effective_strictness": 10
+      },
+      "in_transit": {
+        "HIPAA": { "requirement": "TLS 1.2+ for ePHI in transit", "citation": "45 CFR 164.312(e)(1)", "strictness": 10 },
+        "ABA_Model_Rules": { "requirement": "Reasonable security for transmitted client data", "citation": "Rule 1.6 Comment [18]", "strictness": 7 },
+        "GLBA": { "requirement": "Encryption of NPI in transit", "citation": "16 CFR 314.4(c)(3)", "strictness": 7 },
+        "effective_rule": "HIPAA — TLS 1.2+ for all sensitive data in transit",
+        "effective_strictness": 10
+      }
+    },
+    "data_retention": {
+      "medical_records": {
+        "HIPAA": { "requirement": "6 years from creation or last effective date", "citation": "45 CFR 164.530(j)", "strictness": 9 },
+        "HITECH": { "requirement": "Extends HIPAA retention", "citation": "42 USC 17932", "strictness": 9 },
+        "effective_rule": "6 years minimum for medical document data",
+        "effective_strictness": 9
+      },
+      "client_files": {
+        "ABA_Model_Rules": { "requirement": "Varies by state — typically 5-7 years post-representation", "citation": "Rule 1.15", "strictness": 7 },
+        "GLBA": { "requirement": "5 years for financial records", "citation": "16 CFR 314 / SEC Rule 17a-4", "strictness": 6 },
+        "effective_rule": "7 years maximum for legal/financial documents (strictest state bar)",
+        "effective_strictness": 7
+      },
+      "safety_records": {
+        "OSHA": { "requirement": "5 years for 300 logs, 3 years for 301 forms", "citation": "29 CFR 1904.33", "strictness": 7 },
+        "DOT_FMCSA": { "requirement": "HOS: 6 months; DQF: 3 years post-employment", "citation": "49 CFR 395.8(j), 391.51", "strictness": 6 },
+        "effective_rule": "5 years for safety-related documents",
+        "effective_strictness": 7
+      }
+    },
+    "pii_detection": {
+      "medical_phi": {
+        "HIPAA": { "requirement": "18 PHI identifiers per Safe Harbor method", "citation": "45 CFR 164.514(b)(2)", "strictness": 10 },
+        "effective_rule": "All 18 HIPAA PHI identifiers must be detected and flagged",
+        "effective_strictness": 10
+      },
+      "financial_npi": {
+        "GLBA": { "requirement": "Non-public personal information: SSN, account numbers, income, etc.", "citation": "15 USC 6802", "strictness": 8 },
+        "effective_rule": "SSN, financial account numbers, income data must be detected",
+        "effective_strictness": 8
+      },
+      "client_pii": {
+        "ABA_Model_Rules": { "requirement": "Client identity information must be protected", "citation": "Rule 1.6", "strictness": 8 },
+        "effective_rule": "Client names, contact info, case identifiers must be detected",
+        "effective_strictness": 8
+      },
+      "driver_pii": {
+        "DOT_FMCSA": { "requirement": "CDL numbers, SSN in DQF files", "citation": "49 CFR 391", "strictness": 6 },
+        "effective_rule": "CDL numbers, SSN, medical certificates for drivers",
+        "effective_strictness": 6
+      }
+    },
+    "data_minimization": {
+      "principle": {
+        "HIPAA": { "requirement": "Minimum necessary standard for PHI access/sharing", "citation": "45 CFR 164.502(b)", "strictness": 10 },
+        "ABA_Model_Rules": { "requirement": "Limit access to client information to what's needed", "citation": "Rule 1.6(a)", "strictness": 8 },
+        "GLBA": { "requirement": "Collect only information necessary for business purpose", "citation": "16 CFR 314.4(a)", "strictness": 7 },
+        "effective_rule": "HIPAA minimum necessary standard applied universally",
+        "effective_strictness": 10
+      }
+    },
+    "breach_notification": {
+      "medical": {
+        "HIPAA": { "requirement": "Notify HHS within 60 days; affected individuals within 60 days; >500 = media notification", "citation": "45 CFR 164.404-408", "strictness": 10 },
+        "HITECH": { "requirement": "72-hour notification for breaches >500; AG notification", "citation": "42 USC 17932", "strictness": 10 },
+        "effective_rule": "72-hour notification threshold for any PHI breach affecting 500+ individuals",
+        "effective_strictness": 10
+      },
+      "financial": {
+        "GLBA": { "requirement": "Prompt notification for unauthorized access to NPI", "citation": "16 CFR 314.6", "strictness": 8 },
+        "effective_rule": "Immediate notification for unauthorized NPI access",
+        "effective_strictness": 8
+      }
+    },
+    "access_control": {
+      "principle": {
+        "HIPAA": { "requirement": "Role-based access, unique user IDs, auto-logoff, audit logs", "citation": "45 CFR 164.312(a-d)", "strictness": 10 },
+        "ABA_Model_Rules": { "requirement": "Supervision of staff handling client data", "citation": "Rule 5.3", "strictness": 7 },
+        "GLBA": { "requirement": "Access controls for customer NPI", "citation": "16 CFR 314.4(a)", "strictness": 7 },
+        "effective_rule": "HIPAA-standard RBAC with audit logging for all pipeline components",
+        "effective_strictness": 10
+      }
+    }
+  },
+  "conflict_log": [],
+  "strictest_rule_policy": {
+    "enabled": true,
+    "fallback_vertical": "medical",
+    "rationale": "HIPAA carries the heaviest penalties (up to $1.93M/violation/year) and broadest definition of protected data. Defaulting to HIPAA-level protection covers all other verticals by superset."
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "version": "1.0.0",
+  "vertical": "legal",
+  "generated_at": "2026-08-26T00:00:00Z",
+  "policy_basis": "strictest_standard_wins — ABA + State Bar superset applied",
+  "rules": {
+    "R-LEG-001": {
+      "name": "Client Confidentiality Protection",
+      "description": "All client information in documents must be treated as confidential. No client-identifying information may be exposed to unauthorized parties or cross-contaminated with other clients' data.",
+      "citation": "ABA Model Rule 1.6",
+      "severity": "critical",
+      "action": "isolate_and_protect",
+      "pipeline_trigger": "ingestion",
+      "on_violation": "quarantine_document"
+    },
+    "R-LEG-002": {
+      "name": "Client File Retention",
+      "description": "Client-related documents must be retained per the strictest applicable state bar requirement (typically 5-7 years post-representation). Do not purge without verifying no pending obligations.",
+      "citation": "ABA Model Rule 1.15, jurisdiction-specific",
+      "severity": "high",
+      "action": "enforce_retention",
+      "minimum_years": 7,
+      "maximum_years": 10,
+      "pipeline_trigger": "ssd_purge",
+      "on_violation": "prevent_purge"
+    },
+    "R-LEG-003": {
+      "name": "Privileged Communications Safeguard",
+      "description": "Attorney-client privileged communications must be identified and given heightened protection — no AI-based analysis or external transmission without explicit attorney approval.",
+      "citation": "ABA Model Rule 1.6, applicable privilege law",
+      "severity": "critical",
+      "action": "privilege_flag",
+      "pipeline_trigger": "classification",
+      "on_violation": "halt_processing"
+    },
+    "R-LEG-004": {
+      "name": "IOLTA / Financial Data Isolation",
+      "description": "Documents containing IOLTA account numbers or client financial data per GLBA must be encrypted and isolated from general processing.",
+      "citation": "ABA Model Rule 1.15, GLBA 16 CFR 314",
+      "severity": "high",
+      "action": "isolate_financial",
+      "pipeline_trigger": "ingestion",
+      "on_violation": "quarantine"
+    },
+    "R-LEG-005": {
+      "name": "Encryption — Legal Documents",
+      "description": "All legal documents containing client-identifying information must be encrypted at rest (AES-256) and in transit (TLS 1.2+). State bar requirements may be stricter.",
+      "citation": "ABA Model Rule 1.6 Comment [18], state-specific",
+      "severity": "high",
+      "action": "enforce_encryption",
+      "standard": "AES-256-GCM",
+      "pipeline_trigger": "storage",
+      "on_violation": "block_storage"
+    },
+    "R-LEG-006": {
+      "name": "Cloud Storage Compliance",
+      "description": "Legal documents stored in cloud or shared infrastructure must comply with the strictest state bar cloud storage opinion. Vendor due diligence required.",
+      "citation": "ABA Formal Opinion 477R, state bar opinions",
+      "severity": "medium",
+      "action": "vendor_audit",
+      "pipeline_trigger": "external_sharing",
+      "on_violation": "block_transfer"
+    },
+    "R-LEG-007": {
+      "name": "Cross-Client Ethical Wall",
+      "description": "When processing documents from multiple clients, enforce data segregation. No cross-contamination of client metadata, vectors, or document links.",
+      "citation": "ABA Model Rule 1.6, Conflict of Interest rules",
+      "severity": "critical",
+      "action": "enforce_isolation",
+      "pipeline_trigger": "qdrant_ingestion",
+      "on_violation": "block_and_alert"
+    }
+  }
+}

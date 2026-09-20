@@ -1,0 +1,91 @@
+{
+  "version": "1.0.0",
+  "vertical": "medical",
+  "generated_at": "2026-08-26T00:00:00Z",
+  "policy_basis": "strictest_standard_wins — HIPAA/HITECH superset applied",
+  "rules": {
+    "R-MED-001": {
+      "name": "PHI Identifier Detection",
+      "description": "All 18 HIPAA Safe Harbor PHI identifiers must be detected in ingested documents before processing proceeds.",
+      "citation": "45 CFR 164.514(b)(2)",
+      "severity": "critical",
+      "action": "flag_and_redact_or_hold",
+      "identifiers": [
+        "names", "geographic_data", "dates", "phone_numbers", "fax_numbers",
+        "email_addresses", "ssn", "medical_record_numbers", "health_plan_beneficiary_numbers",
+        "account_numbers", "certificate_license_numbers", "vehicle_identifiers",
+        "device_identifiers", "web_urls", "ip_addresses", "biometric_identifiers",
+        "face_photos", "any_unique_identifying_number"
+      ],
+      "pipeline_trigger": "pre_ingestion_scan",
+      "on_violation": "hold_for_review"
+    },
+    "R-MED-002": {
+      "name": "Encryption at Rest",
+      "description": "All ePHI must be encrypted with AES-256 (or equivalent) at rest on staging and SSD.",
+      "citation": "45 CFR 164.312(a)(2)(iv)",
+      "severity": "critical",
+      "action": "enforce_encryption",
+      "standard": "AES-256-GCM",
+      "pipeline_trigger": "ssd_copy",
+      "on_violation": "block_transfer"
+    },
+    "R-MED-003": {
+      "name": "Encryption in Transit",
+      "description": "All ePHI transmissions must use TLS 1.2 or higher.",
+      "citation": "45 CFR 164.312(e)(1)",
+      "severity": "critical",
+      "action": "enforce_tls",
+      "minimum_version": "TLSv1.2",
+      "pipeline_trigger": "ingestion_fetch",
+      "on_violation": "reject_connection"
+    },
+    "R-MED-004": {
+      "name": "Minimum Necessary Standard",
+      "description": "Access to PHI must be limited to the minimum necessary for the intended purpose.",
+      "citation": "45 CFR 164.502(b)",
+      "severity": "high",
+      "action": "data_minimization",
+      "pipeline_trigger": "post_processing",
+      "on_violation": "strip_excess_data"
+    },
+    "R-MED-005": {
+      "name": "Retention Period — Medical Records",
+      "description": "Medical document metadata and derived data must be retained for at least 6 years from creation or last effective date.",
+      "citation": "45 CFR 164.530(j)",
+      "severity": "high",
+      "action": "enforce_retention",
+      "minimum_years": 6,
+      "pipeline_trigger": "ssd_purge",
+      "on_violation": "prevent_purge"
+    },
+    "R-MED-006": {
+      "name": "Breach Notification — PHI",
+      "description": "Any breach of unsecured PHI affecting 500+ individuals must be reported to HHS within 60 days. Any breach affecting 500+ in a state requires AG and media notification. HITECH extends to 72-hour notification for large breaches.",
+      "citation": "45 CFR 164.404-408, 42 USC 17932",
+      "severity": "critical",
+      "action": "breach_protocol",
+      "notification_deadline_hours": 72,
+      "pipeline_trigger": "continuous",
+      "on_violation": "alert_and_log"
+    },
+    "R-MED-007": {
+      "name": "Access Audit Logging",
+      "description": "All access to ePHI must be logged with user identity, timestamp, and action performed.",
+      "citation": "45 CFR 164.312(b)",
+      "severity": "critical",
+      "action": "audit_logging",
+      "pipeline_trigger": "continuous",
+      "on_violation": "alert"
+    },
+    "R-MED-008": {
+      "name": "De-identification Standard",
+      "description": "Documents containing PHI must be de-identified per Safe Harbor or Expert Determination before any external sharing.",
+      "citation": "45 CFR 164.514",
+      "severity": "high",
+      "action": "de_identify",
+      "pipeline_trigger": "external_sharing",
+      "on_violation": "block_sharing"
+    }
+  }
+}

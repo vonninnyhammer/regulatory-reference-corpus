@@ -1,0 +1,127 @@
+{
+  "version": "1.0.0",
+  "created_at": "2026-08-26T00:00:00Z",
+  "last_scan": null,
+  "last_update": null,
+  "verticals": {
+    "medical": {
+      "label": "Medical / Healthcare",
+      "regulations": [
+        {
+          "id": "HIPAA",
+          "full_name": "Health Insurance Portability and Accountability Act",
+          "citation": "Pub.L. 104–191, 110 Stat. 1936 (1996)",
+          "key_parts": ["Privacy Rule 45 CFR 164", "Security Rule 45 CFR 164 Subpart C", "Breach Notification Rule 45 CFR 164 Subpart D"],
+          "relevance": "PHI handling, storage, transmission, retention, de-identification, breach notification",
+          "source_url": "https://www.hhs.gov/hipaa/for-professionals/privacy/index.html",
+          "local_text": "regulations/medical/hipaa_privacy_rule.txt",
+          "status": "active"
+        },
+        {
+          "id": "HITECH",
+          "full_name": "Health Information Technology for Economic and Clinical Health Act",
+          "citation": "Pub.L. 111-5, Title XIII (2009)",
+          "key_parts": ["Meaningful Use", "Breach Notification Expansion", "Business Associate Direct Liability"],
+          "relevance": "Electronic PHI, breach notification thresholds, BA obligations, penalty structure",
+          "source_url": "https://www.hhs.gov/hipaa/for-professionals/breach-notification/index.html",
+          "local_text": "regulations/medical/hitech_act.txt",
+          "status": "active"
+        }
+      ],
+      "operational_rules_count": 0,
+      "last_rule_update": null
+    },
+    "legal": {
+      "label": "Legal / Professional Services",
+      "regulations": [
+        {
+          "id": "ABA_Model_Rules",
+          "full_name": "ABA Model Rules of Professional Conduct",
+          "citation": "ABA Model Rules 1.1, 1.4, 1.6, 1.15",
+          "key_parts": ["Rule 1.6 Confidentiality", "Rule 1.15 Safekeeping Property", "Rule 1.4 Communication"],
+          "relevance": "Client confidentiality, document retention, IOLTA account safety, privileged communications",
+          "source_url": "https://www.americanbar.org/groups/professional_responsibility/publications/model_rules_of_professional_conduct/",
+          "local_text": "regulations/legal/aba_model_rules.txt",
+          "status": "active"
+        },
+        {
+          "id": "GLBA",
+          "full_name": "Gramm-Leach-Bliley Act",
+          "citation": "Pub.L. 106-102 (1999)",
+          "key_parts": ["Financial Privacy Rule", "Safeguards Rule", "Pretexting Provisions"],
+          "relevance": "Non-public personal information (NPI), GLBA Safeguards Rule for financial data, data sharing restrictions",
+          "source_url": "https://www.consumerfinance.gov/rules-policy/final-rules/privacy-of-consumer-financial-information/",
+          "local_text": "regulations/legal/glba.txt",
+          "status": "active"
+        },
+        {
+          "id": "State_Bar_Requirements",
+          "full_name": "State Bar Association Client Confidentiality Requirements",
+          "citation": "Varies by jurisdiction",
+          "key_parts": ["Data-at-rest encryption", "Client file retention periods", "Ethical walls", "Cloud storage approvals"],
+          "relevance": "Jurisdiction-specific encryption mandates, retention schedules, cloud usage guidelines",
+          "source_url": null,
+          "local_text": "regulations/legal/state_bar_summary.txt",
+          "status": "active"
+        }
+      ],
+      "operational_rules_count": 0,
+      "last_rule_update": null
+    },
+    "logistics": {
+      "label": "Logistics / Transportation / Safety",
+      "regulations": [
+        {
+          "id": "DOT_FMCSA",
+          "full_name": "Department of Transportation / Federal Motor Carrier Safety Administration",
+          "citation": "49 CFR Parts 382-399",
+          "key_parts": ["ELD Mandate 49 CFR 395", "Driver Qualification Files 49 CFR 391", "Hours of Service 49 CFR 395"],
+          "relevance": "Electronic logging device records, driver qualification files, HOS records retention (6 months-3 years)",
+          "source_url": "https://www.fmcsa.dot.gov/regulations",
+          "local_text": "regulations/logistics/dot_fmcsa.txt",
+          "status": "active"
+        },
+        {
+          "id": "OSHA",
+          "full_name": "Occupational Safety and Health Administration",
+          "citation": "29 CFR 1900-1999",
+          "key_parts": ["Recordkeeping 29 CFR 1904", "Hazard Communication 29 CFR 1910.1200", "OSHA 300 Logs"],
+          "relevance": "Workplace injury logs (5-year retention), safety data sheets, incident reports, training records",
+          "source_url": "https://www.osha.gov/recordkeeping",
+          "local_text": "regulations/logistics/osha_recordkeeping.txt",
+          "status": "active"
+        }
+      ],
+      "operational_rules_count": 0,
+      "last_rule_update": null
+    }
+  },
+  "cross_reference_matrix": "cross-reference/matrix.json",
+  "conflict_resolution": {
+    "strategy": "strictest_standard_wins",
+    "description": "When regulations conflict, always default to the strictest applicable standard."
+  },
+  "change_log": "change-log/",
+  "exceptions": [
+    {
+      "id": "EX-001",
+      "title": "Full-Disk Encryption — Deferred to Production Hardware",
+      "status": "pending",
+      "affected_rules": ["R-MED-002", "R-LEG-005"],
+      "completion_trigger": "business_registration + grant_funding + hardware_procurement",
+      "detail_file": "change-log/exception-001-encryption-deferred.json"
+    }
+  ],
+  "environment_phase": "pre_registration_development",
+  "phase_gates": {
+    "pre_registration_development": {
+      "allow": ["r_and_d", "eval", "docs"],
+      "deny": ["formation", "grants", "procurement", "customer_data", "revenue"]
+    },
+    "post_formation": {
+      "requires": ["EIN", "business_bank_account"],
+      "allow": ["all"]
+    }
+  },
+  "note": "All compliance enforcement is active and functional. Disk encryption is the only deferred item — requires production hardware procured post-registration with grant funding."
+}

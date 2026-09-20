@@ -1,0 +1,78 @@
+{
+  "version": "1.0.0",
+  "vertical": "logistics",
+  "generated_at": "2026-08-26T00:00:00Z",
+  "policy_basis": "strictest_standard_wins — DOT/FMCSA + OSHA combined applied",
+  "rules": {
+    "R-LOG-001": {
+      "name": "ELD/HOS Record Retention",
+      "description": "Electronic Logging Device and Hours of Service records must be retained for at least 6 months (FMCSA minimum). OSHA overlap extends safety-relevant records to 5 years.",
+      "citation": "49 CFR 395.8(j), 29 CFR 1904.33",
+      "severity": "high",
+      "action": "enforce_retention",
+      "minimum_years": 1,
+      "minimum_months": 6,
+      "note": "Strictest applicable: OSHA 300 logs require 5 years, so safety-critical logistics documents default to 5-year retention.",
+      "effective_minimum_years": 5,
+      "pipeline_trigger": "ssd_purge",
+      "on_violation": "prevent_purge"
+    },
+    "R-LOG-002": {
+      "name": "Driver Qualification File Retention",
+      "description": "Driver Qualification Files must be retained for 3 years after the driver's employment ends, plus current year.",
+      "citation": "49 CFR 391.51",
+      "severity": "high",
+      "action": "enforce_retention",
+      "minimum_years": 3,
+      "pipeline_trigger": "ssd_purge",
+      "on_violation": "prevent_purge"
+    },
+    "R-LOG-003": {
+      "name": "OSHA 300 Log Retention",
+      "description": "OSHA injury and illness logs must be retained for 5 years following the year they cover.",
+      "citation": "29 CFR 1904.33",
+      "severity": "high",
+      "action": "enforce_retention",
+      "minimum_years": 5,
+      "pipeline_trigger": "ssd_purge",
+      "on_violation": "prevent_purge"
+    },
+    "R-LOG-004": {
+      "name": "Safety Data Sheet (SDS) Availability",
+      "description": "Safety Data Sheets must be accessible to employees for any hazardous chemicals. Documents containing SDS references must be flagged for long-term retention.",
+      "citation": "29 CFR 1910.1200(g)",
+      "severity": "medium",
+      "action": "flag_for_retention",
+      "pipeline_trigger": "classification",
+      "on_violation": "flag"
+    },
+    "R-LOG-005": {
+      "name": "Driver PII Protection",
+      "description": "Driver personally identifiable information (CDL numbers, SSN, medical certificates) must be protected. While DOT/FMCSA lacks HIPAA-level mandates, the HIPAA superset applies due to cross-vertical policy.",
+      "citation": "49 CFR 391, HIPAA cross-vertical superset",
+      "severity": "high",
+      "action": "pii_scan_and_protect",
+      "pii_types": ["ssn", "cdl_number", "medical_certificate", "name", "dob", "address"],
+      "pipeline_trigger": "pre_ingestion_scan",
+      "on_violation": "flag_and_hold"
+    },
+    "R-LOG-006": {
+      "name": "DOT Audit Readiness",
+      "description": "All DOT/FMCSA regulated records must be organized for rapid retrieval during a DOT audit. Maintain index and metadata for quick search.",
+      "citation": "49 CFR 390-399 general",
+      "severity": "medium",
+      "action": "audit_index_maintenance",
+      "pipeline_trigger": "qdrant_ingestion",
+      "on_violation": "log_warning"
+    },
+    "R-LOG-007": {
+      "name": "Incident Report Preservation",
+      "description": "Accident and incident reports must not be modified or purged. Maintain chain of custody for any document flagged as incident-related.",
+      "citation": "29 CFR 1904, 49 CFR 390.15",
+      "severity": "high",
+      "action": "immutable_retention",
+      "pipeline_trigger": "classification",
+      "on_violation": "block_modification"
+    }
+  }
+}
